@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Tahoma,sans-serif'%3E%D8%AA%3C/text%3E%3C/svg%3E" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>تولید انبوه تصویر از قالب فتوشاپ</title>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7.5 9h6M7.5 12.5h9M7.5 16h5.5"/>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <h1>تولید انبوه تصویر از قالب فتوشاپ</h1>
+        <p>اطلاعات اکسل × لایه‌های متنی PSD &nbsp;→&nbsp; یک تصویر برای هر ردیف</p>
+      </div>
+    </div>
+    <div class="appbar-actions">
+      <button class="btn ghost" id="btnSaveSettings">ذخیره‌ی تنظیمات</button>
+      <button class="btn ghost" id="btnLoadSettings">بازخوانی</button>
+      <button class="btn ghost" id="btnHelp">راهنما</button>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab is-active" data-tab="files"><span class="chip">۱</span> فایل‌ها</button>
+    <button class="tab" data-tab="layers" disabled><span class="chip">۲</span> لایه‌های متنی <i class="badge" id="badgeLayers"></i></button>
+    <button class="tab" data-tab="sheets" disabled><span class="chip">۳</span> شیت‌ها و نام فایل <i class="badge" id="badgeSheets"></i></button>
+    <button class="tab" data-tab="settings" disabled><span class="chip">۴</span> تنظیمات ظاهری</button>
+    <button class="tab" data-tab="run" disabled><span class="chip">۵</span> اجرا و خروجی</button>
+  </nav>
+</header>
+
+<main class="container">
+
+  <!-- ══════════════════ تب ۱: فایل‌ها ══════════════════ -->
+  <section class="panel is-active" data-panel="files">
+    <div class="card">
+      <div class="card-head">
+        <h2>مسیر فایل‌ها</h2>
+        <p>اکسل اطلاعات و قالب فتوشاپ را انتخاب کنید، سپس «بررسی و بارگذاری» را بزنید.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-3">
+          <label class="field">
+            <span>فایل اکسل اطلاعات <em>(.xlsx)</em></span>
+            <span class="input-group">
+              <input type="text" id="excelPath" placeholder="مسیر فایل اکسل…" />
+              <button class="btn icon" data-pick="excel" title="انتخاب فایل">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              </button>
+            </span>
+          </label>
+
+          <label class="field">
+            <span>قالب فتوشاپ <em>(.psd)</em></span>
+            <span class="input-group">
+              <input type="text" id="psdPath" placeholder="مسیر فایل PSD…" />
+              <button class="btn icon" data-pick="psd" title="انتخاب فایل">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              </button>
+            </span>
+          </label>
+
+          <label class="field">
+            <span>پوشه‌ی مقصد خروجی</span>
+            <span class="input-group">
+              <input type="text" id="outDir" placeholder="خروجی‌ها اینجا ذخیره می‌شوند…" />
+              <button class="btn icon" data-pick="dir" title="انتخاب پوشه">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              </button>
+            </span>
+          </label>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid grid-4">
+          <label class="field">
+            <span>سطر عنوان‌ها در اکسل</span>
+            <input type="number" id="headerRow" value="1" min="1" />
+          </label>
+          <label class="field">
+            <span>فرمت خروجی</span>
+            <select id="imageFormat">
+              <option value="pdf" selected>PDF</option>
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="webp">WEBP</option>
+            </select>
+          </label>
+          <label class="field" id="qualityWrap">
+            <span>کیفیت JPG</span>
+            <input type="number" id="jpegQuality" value="95" min="10" max="100" />
+          </label>
+          <label class="field hidden" id="pdfWrap">
+            <span>حالت خروجی PDF</span>
+            <select id="pdfMode">
+              <option value="both">هر لیبل جدا + یک فایل کلی از همه‌ی لیبل‌ها</option>
+              <option value="all">فقط یک فایل کلی از همه‌ی لیبل‌ها</option>
+              <option value="sheet">در هر پوشه یک فایل یکپارچه</option>
+              <option value="each">فقط هر لیبل جداگانه</option>
+            </select>
+          </label>
+          <label class="field hidden" id="pdfAllNameWrap">
+            <span>نام فایل کلی PDF</span>
+            <input type="text" id="pdfAllName" value="همه-صفحات" />
+          </label>
+          <label class="field hidden" id="pdfDpiWrap">
+            <span>رزولوشن PDF (dpi)</span>
+            <input type="number" id="pdfDpi" value="150" min="72" max="600" />
+          </label>
+        </div>
+
+        <div class="check-row">
+          <label class="check"><input type="checkbox" id="savePsd" /> <span>فایل PSD اصلاح‌شده هم ذخیره شود</span></label>
+          <label class="check"><input type="checkbox" id="csvIndex" checked /> <span>ساخت فایل CSV فهرست خروجی‌ها</span></label>
+        </div>
+
+        <div class="status hidden" id="fileStatus"></div>
+      </div>
+      <div class="card-foot">
+        <span class="foot-hint">پس از بررسی، تب‌های بعدی فعال می‌شوند.</span>
+        <div class="foot-actions">
+          <button class="btn primary" id="btnAnalyze">بررسی و بارگذاری فایل‌ها</button>
+          <button class="btn" data-goto="layers">بعدی →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ تب ۲: لایه‌های متنی ══════════════════ -->
+  <section class="panel" data-panel="layers">
+    <div class="card">
+      <div class="card-head">
+        <h2>نگاشت لایه‌های متنی به ستون‌های اکسل</h2>
+        <p>
+          هرجا در متن لایه نوشته باشید <code>{{نام ستون}}</code> با مقدار همان ستون عوض می‌شود.
+          اگر عنوان‌ها یکی نبود، از فهرست بازشو ستون درست را انتخاب کنید.
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="layer-list" id="layerList"></div>
+      </div>
+      <div class="card-foot">
+        <span class="foot-hint" id="layersHint"></span>
+        <div class="foot-actions">
+          <button class="btn" data-goto="files">← قبلی</button>
+          <button class="btn primary" data-goto="sheets">بعدی →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ تب ۳: شیت‌ها ══════════════════ -->
+  <section class="panel" data-panel="sheets">
+    <div class="card">
+      <div class="card-head">
+        <h2>شیت‌ها و نام فایل خروجی</h2>
+        <p>
+          برای هر شیت دو ستون را که نام فایل از ترکیب آن‌ها ساخته می‌شود انتخاب کنید؛
+          داخل پوشه‌ی مقصد، برای هر شیت یک پوشه با نام همان شیت ساخته می‌شود.
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table class="table" id="sheetTable">
+            <thead>
+              <tr>
+                <th>فعال</th>
+                <th>نام شیت</th>
+                <th>ردیف‌ها</th>
+                <th>تعداد</th>
+                <th>ستون نام فایل ۱</th>
+                <th>ستون نام فایل ۲</th>
+                <th>جداکننده</th>
+                <th>پیشوند / پسوند</th>
+                <th>قالب اختصاصی / ستون قالب</th>
+                <th>پوشه</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" id="sameNameColumns" checked /> <span>نام‌گذاری فایل را برای همه‌ی شیت‌ها یکسان اعمال کن</span></label>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="foot-hint"></span>
+        <div class="foot-actions">
+          <button class="btn" data-goto="layers">← قبلی</button>
+          <button class="btn primary" data-goto="settings">بعدی →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ تب ۴: تنظیمات ظاهری ══════════════════ -->
+  <section class="panel" data-panel="settings">
+    <div class="card">
+      <div class="card-head">
+        <h2>تنظیمات ظاهری و کیفیت</h2>
+        <p>اگر متن کمی جابجا یا کوچک/بزرگ بود، از همین گزینه‌ها استفاده کنید. بعد از هر تغییر، پیش‌نمایش را دوباره بگیرید.</p>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-3">
+          <label class="field">
+            <span>دقت خروجی (مقیاس)</span>
+            <select id="optScale">
+              <option value="0.5">۵۰٪ — سریع</option>
+              <option value="1" selected>۱۰۰٪ — اندازه‌ی سند</option>
+              <option value="1.5">۱۵۰٪</option>
+              <option value="2">۲۰۰٪ — کیفیت بالا</option>
+              <option value="3">۳۰۰٪ — چاپ</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>فونت جایگزین (برای متن فارسی)</span>
+            <span class="input-group">
+              <input list="fontList" id="optFont" placeholder="خودکار — فونت قالب" />
+              <datalist id="fontList"></datalist>
+              <button class="btn icon" data-pick="font" title="افزودن فایل فونت">＋</button>
+            </span>
+          </label>
+
+          <label class="field">
+            <span>کیفیت لبه‌ها (سوپرسمپل)</span>
+            <select id="optSupersample">
+              <option value="1">۱× — سریع</option>
+              <option value="2" selected>۲× — پیشنهادی</option>
+              <option value="3">۳× — نرم‌تر</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>ضریب اندازه‌ی فونت: <b id="fontScaleValue">۱</b></span>
+            <input type="range" id="optFontScale" min="0.6" max="1.6" step="0.02" value="1" />
+          </label>
+
+          <label class="field">
+            <span>ضریب فاصله‌ی خطوط: <b id="lineHeightValue">۱</b></span>
+            <input type="range" id="optLineHeight" min="0.7" max="2" step="0.02" value="1" />
+          </label>
+
+          <div class="field">
+            <span>پس‌زمینه</span>
+            <span class="row">
+              <label class="check"><input type="checkbox" id="optTransparent" /> <span>شفاف</span></label>
+              <input type="color" id="optBackground" value="#ffffff" />
+            </span>
+          </div>
+
+          <label class="field">
+            <span>جابجایی افقی متن (پیکسل)</span>
+            <input type="number" id="optOffsetX" value="0" step="1" />
+          </label>
+
+          <label class="field">
+            <span>جابجایی عمودی متن (پیکسل)</span>
+            <input type="number" id="optOffsetY" value="0" step="1" />
+          </label>
+
+          <div class="field">
+            <span>رنگ متن (اختیاری)</span>
+            <span class="row">
+              <label class="check"><input type="checkbox" id="optForceColor" /> <span>اعمال روی همه‌ی متن‌ها</span></label>
+              <input type="color" id="optTextColor" value="#ffffff" />
+            </span>
+          </div>
+
+          <label class="field">
+            <span>سبک لنگر متن</span>
+            <select id="optAnchorMode">
+              <option value="box" selected>از جعبه‌ی متن فایل (پیشنهادی)</option>
+              <option value="origin">از نقطه‌ی مبدأ فتوشاپ</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>شکستن خودکار خطوط بلند</span>
+            <select id="optWrap">
+              <option value="1" selected>فعال (متن‌های پاراگرافی)</option>
+              <option value="0">غیرفعال</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="check-row">
+          <label class="check"><input type="checkbox" id="optIgnoreEffects" /> <span>افکت‌های لایه (سایه/خط دور) نادیده گرفته شوند</span></label>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="foot-hint"></span>
+        <div class="foot-actions">
+          <button class="btn" data-goto="sheets">← قبلی</button>
+          <button class="btn primary" data-goto="run">بعدی →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ تب ۵: اجرا ══════════════════ -->
+  <section class="panel" data-panel="run">
+    <div class="card">
+      <div class="card-head">
+        <h2>پیش‌نمایش و تولید</h2>
+        <p>اول یک ردیف را پیش‌نمایش بگیرید؛ اگر درست بود، تولید کل خروجی‌ها را شروع کنید.</p>
+      </div>
+      <div class="card-body">
+        <div class="toolbar">
+          <label class="inline-field">شیت:
+            <select id="previewSheet"></select>
+          </label>
+          <label class="inline-field">ردیف:
+            <input type="number" id="previewRow" value="1" min="1" />
+          </label>
+          <button class="btn" id="btnPreview">پیش‌نمایش</button>
+          <span class="spacer"></span>
+          <button class="btn ghost" id="btnOpenOut">باز کردن پوشه‌ی خروجی</button>
+          <button class="btn danger hidden" id="btnStop">توقف</button>
+          <button class="btn primary" id="btnStart">شروع تولید</button>
+        </div>
+
+        <div class="run-grid">
+          <div class="preview-wrap">
+            <div class="preview-box" id="previewBox">
+              <span class="placeholder">پیش‌نمایش خروجی اینجا نمایش داده می‌شود.</span>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-head">
+              <span id="progressText">آماده</span>
+              <span class="pct" id="progressPercent">۰٪</span>
+            </div>
+            <div class="progress"><div class="bar" id="progressBar"></div></div>
+            <div class="log" id="logBox"></div>
+          </div>
+        </div>
+
+        <div class="status hidden" id="previewInfo"></div>
+        <div class="status error hidden" id="errorBox"></div>
+      </div>
+      <div class="card-foot">
+        <span class="foot-hint"></span>
+        <div class="foot-actions">
+          <button class="btn" data-goto="settings">← قبلی</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- پنجره‌ی مرور مسیر -->
+<div class="modal hidden" id="browserModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="browserTitle">انتخاب مسیر</strong>
+      <button class="btn icon" id="browserClose">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <button class="btn" id="browserUp">↑ بالاتر</button>
+      <input type="text" id="browserCurrent" readonly />
+      <button class="btn primary" id="browserChoose">انتخاب همین مسیر</button>
+    </div>
+    <div class="browser-list" id="browserList"></div>
+  </div>
+</div>
+
+<!-- راهنما -->
+<div class="modal hidden" id="helpModal">
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <strong>راهنمای سریع</strong>
+      <button class="btn icon" id="helpClose">✕</button>
+    </div>
+    <div class="help-body">
+      <p class="help-lead">کار در پنج تب انجام می‌شود: <b>۱) فایل‌ها</b> ← <b>۲) لایه‌های متنی</b> ← <b>۳) شیت‌ها و نام فایل</b> ← <b>۴) تنظیمات ظاهری</b> ← <b>۵) اجرا و خروجی</b>. بعد از انتخاب فایل‌ها، «بررسی و بارگذاری فایل‌ها» بقیه‌ی تب‌ها را فعال می‌کند.</p>
+      <h3>۱) پلیس‌هولدر داخل متن لایه‌ها</h3>
+      <p>در فتوشاپ روی لایه‌ی متنی بنویسید <code>{{نام و نام خانوادگی}}</code> یا <code>{{سمت}}</code>.
+      هر عنوانی که داخل <code>{{ }}</code> باشد، با ستون هم‌نامش در اکسل تطبیق داده می‌شود
+      (نیم‌فاصله، فاصله، «ی/ک» عربی مهم نیست).</p>
+      <h3>۲) اکسل</h3>
+      <p>سطر اول عنوان ستون‌ها. هر سطر = یک خروجی. چند شیت پشتیبانی می‌شود و برای هر شیت یک پوشه با نام آن ساخته می‌شود.</p>
+      <h3>۳) نام فایل خروجی</h3>
+      <p>در تب «شیت‌ها» برای هر شیت دو ستون انتخاب کنید؛ نام فایل از ترکیب آن‌ها با جداکننده‌ی دلخواه ساخته می‌شود.
+      نام‌های تکراری خودکار شماره می‌خورند و کاراکترهای غیرمجاز ویندوز تمیز می‌شوند.</p>
+      <h3>۴) فونت فارسی</h3>
+      <p>بهتر است فونت قالب روی سیستم نصب باشد. اگر نبود، در تب «تنظیمات ظاهری» یک فونت فارسی انتخاب کنید
+      (یا با دکمه‌ی ＋ فایل فونت را به برنامه اضافه کنید).</p>
+      <h3>۵) جهت و تراز متن</h3>
+      <p>برای هر لایه می‌توانید جهت متن را «راست‌به‌چپ / چپ‌به‌راست / خودکار» تعیین کنید.
+      پیش‌فرضِ تراز، از جعبه‌ی متن خودِ فایل فتوشاپ خوانده می‌شود تا متن دقیقاً سرجای خودش بنشیند.</p>
+      <h3>۶) خروجی</h3>
+      <p>PNG / JPG / WEBP یا PDF. برای PDF چهار حالت دارید؛ حالت پیش‌فرض
+      «<b>هر لیبل جدا + یک فایل کلی از همه‌ی لیبل‌ها</b>» است: هم برای هر ردیف یک فایل PDF جدا،
+      هم یک PDF یکپارچه از همه‌ی لیبل‌ها در پوشه‌ی مقصد. با تیک «CSV فهرست خروجی‌ها» یک فهرست
+      اکسل‌خوان هم کنار فایل‌ها ساخته می‌شود.</p>
+      <h3>نکات مهم</h3>
+      <ul>
+        <li>متن‌ها باید «لایه‌ی متنی (Type Layer)» فتوشاپ باشند، نه تصویر.</li>
+        <li>لایه‌های پنهان در خروجی هم نمایش داده نمی‌شوند.</li>
+        <li>افکت‌های سایه‌ی بیرونی، خط دور، رنگ رویی و درخشش بیرونی بازسازی می‌شوند؛ افکت‌های پیچیده (Bevel، Pattern، Gradient) با هشدار رد می‌شوند.</li>
+        <li>برای دقت میلی‌متری، تیک «ذخیره‌ی PSD اصلاح‌شده» را بزنید تا فایل فتوشاپ با متن‌های درست هم ذخیره شود.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
