@@ -1,0 +1,29 @@
+{
+  "excel_path": "samples/نمونه-اطلاعات.xlsx",
+  "psd_path": "samples/نمونه-قالب.psd",
+  "out_dir": "samples/خروجی-دمو",
+  "header_row": 1,
+  "image_format": "pdf",
+  "jpeg_quality": 95,
+  "save_psd": false,
+  "pdf_mode": "all",
+  "pdf_also_individual": true,
+  "pdf_all_name": "همه-صفحات",
+  "pdf_dpi": 150,
+  "csv_index": true,
+  "render": {
+    "scale": 1,
+    "supersample": 2,
+    "font_scale": 1,
+    "line_height": 1,
+    "offset_x": 0,
+    "offset_y": 0,
+    "font_override": null,
+    "text_color": null,
+    "transparent": false,
+    "background": "#ffffff",
+    "ignore_effects": false,
+    "anchor_mode": "box",
+    "wrap_text": true
+  }
+}
