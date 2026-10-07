@@ -1,0 +1,70 @@
+name: build-windows
+
+# ساخت فایل اجرایی ویندوز (بدون پنجره‌ی CMD، همراه آیکون) روی سرورهای گیت‌هاب.
+# خروجی‌ها: دو «آرتیفکت» به‌نام‌های
+#   PSD-Batch-Generator-windows        (پوشه‌ی ماژولار — پیشنهادی)
+#   PSD-Batch-Generator-windows-onefile (یک فایل exe تنها)
+# با ساختن تگ نسخه (مثل v1.0.0) همان فایل‌ها در Release هم منتشر می‌شوند.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: دریافت سورس
+        uses: actions/checkout@v4
+
+      - name: نصب پایتون
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: نصب کتابخانه‌ها
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: ساخت نسخه‌ی ماژولار (پوشه)
+        run: pyinstaller packaging/windows.spec --noconfirm --clean --distpath dist --workpath build
+
+      - name: بسته‌بندی نسخه‌ی ماژولار
+        shell: pwsh
+        run: Compress-Archive -Path "dist/PSD-Batch-Generator/*" -DestinationPath "dist/PSD-Batch-Generator-windows.zip" -Force
+
+      - name: ساخت نسخه‌ی تک‌فایلی
+        env:
+          PSD_BATCH_ONEFILE: "1"
+        run: pyinstaller packaging/windows.spec --noconfirm --clean --distpath dist-onefile --workpath build-onefile
+
+      - name: بسته‌بندی نسخه‌ی تک‌فایلی
+        shell: pwsh
+        run: Compress-Archive -Path "dist-onefile/PSD-Batch-Generator.exe" -DestinationPath "dist-onefile/PSD-Batch-Generator-onefile.zip" -Force
+
+      - name: بارگذاری آرتیفکت‌ها
+        uses: actions/upload-artifact@v4
+        with:
+          name: PSD-Batch-Generator-windows
+          path: |
+            dist/PSD-Batch-Generator-windows.zip
+            dist-onefile/PSD-Batch-Generator-onefile.zip
+          if-no-files-found: error
+
+      - name: انتشار در Release (فقط برای تگ‌ها)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/PSD-Batch-Generator-windows.zip
+            dist-onefile/PSD-Batch-Generator-onefile.zip
+          generate_release_notes: true
